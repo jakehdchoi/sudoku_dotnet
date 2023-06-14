@@ -11,12 +11,29 @@ public class Game : MonoBehaviour
     public GameObject FieldPrefab;
     public GameObject ControlPanel;
     public GameObject ControlPrefab;
+    public Button InformationButton;
 
 
     void Start()
     {
         CreateFieldPrefabs();
         CreateControlPrefabs();
+    }
+
+    private bool isInformationButtonActive = false;
+    public void ClickOn_InformationButton()
+    {
+        Debug.Log($"ClickOn_InformationButton: ");
+        if (isInformationButtonActive)
+        {
+            isInformationButtonActive = false;
+            InformationButton.GetComponent<Image>().color = new Color(1f, 1f, 1f);
+        }
+        else
+        {
+            isInformationButtonActive = true;
+            InformationButton.GetComponent<Image>().color = new Color(0.70f, 0.99f, 0.99f);
+        }
     }
 
     private Dictionary<Tuple<int, int>, FieldPrefabObject> _fieldPrefabObjectDic =
