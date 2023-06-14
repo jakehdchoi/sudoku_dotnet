@@ -741,7 +741,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1599349565}
         m_TargetAssemblyTypeName: Game, Assembly-CSharp
-        m_MethodName: ClickOn_InformationButton
+        m_MethodName: OnClick_InformationButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -21,9 +21,9 @@ public class Game : MonoBehaviour
     }
 
     private bool isInformationButtonActive = false;
-    public void ClickOn_InformationButton()
+    public void OnClick_InformationButton()
     {
-        Debug.Log($"ClickOn_InformationButton: ");
+        Debug.Log($"OnClick_InformationButton: ");
         if (isInformationButtonActive)
         {
             isInformationButtonActive = false;
@@ -79,7 +79,14 @@ public class Game : MonoBehaviour
         Debug.Log($"OnClick_ControlPrefabs: {controlPrefabObject.Number}");
         if (_currentHoveredFieldPrefab != null)
         {
-            _currentHoveredFieldPrefab.SetNumber(controlPrefabObject.Number);
+            if (isInformationButtonActive)
+            {
+                _currentHoveredFieldPrefab.SetSmallNumber(controlPrefabObject.Number);
+            }
+            else
+            {
+                _currentHoveredFieldPrefab.SetNumber(controlPrefabObject.Number);
+            }
         }
     }
 
