@@ -9,10 +9,14 @@ public class Game : MonoBehaviour
     public GameObject MainPanel;
     public GameObject SudokuFieldPanel;
     public GameObject FieldPrefab;
+    public GameObject ControlPanel;
+    public GameObject ControlPrefab;
+
 
     void Start()
     {
         CreateFieldPrefabs();
+        CreateControlPrefabs();
     }
 
     private Dictionary<Tuple<int, int>, FieldPrefabObject> _fieldPrefabObjectDic =
@@ -26,26 +30,53 @@ public class Game : MonoBehaviour
             {
                 GameObject instance = GameObject.Instantiate(FieldPrefab, SudokuFieldPanel.transform);
 
-                FieldPrefabObject _fieldPrefabObject = new FieldPrefabObject(instance, row, col);
-                _fieldPrefabObjectDic.Add(new Tuple<int, int>(row, col), _fieldPrefabObject);
+                FieldPrefabObject fieldPrefabObject = new FieldPrefabObject(instance, row, col);
+                _fieldPrefabObjectDic.Add(new Tuple<int, int>(row, col), fieldPrefabObject);
 
                 instance.GetComponent<Button>().onClick.AddListener(
-                    () => OnClick_FieldPrefabs(_fieldPrefabObject)
+                    () => OnClick_FieldPrefabs(fieldPrefabObject)
                     );
             }
         }
     }
 
-    private FieldPrefabObject _currentHoveredFieldPrefab;
-    private void OnClick_FieldPrefabs(FieldPrefabObject _fieldPrefabObject)
+    private void CreateControlPrefabs()
     {
-        Debug.Log($"Clicked Prefab Row({_fieldPrefabObject.Row}) Col({_fieldPrefabObject.Col})");
+        for (int i = 1; i < 10; i++)
+        {
+            GameObject instance = GameObject.Instantiate(ControlPrefab, ControlPanel.transform);
+            instance.GetComponentInChildren<Text>().text = i.ToString();
+
+            ControlPrefabObject controlPrefabObject = new ControlPrefabObject();
+            controlPrefabObject.Number = i;
+
+            instance.GetComponent<Button>().onClick.AddListener(
+                () => OnClick_ControlPrefabs(controlPrefabObject)
+                );
+
+        }
+    }
+
+    private void OnClick_ControlPrefabs(ControlPrefabObject controlPrefabObject)
+    {
+        Debug.Log($"OnClick_ControlPrefabs: {controlPrefabObject.Number}");
+        if (_currentHoveredFieldPrefab != null)
+        {
+            _currentHoveredFieldPrefab.SetNumber(controlPrefabObject.Number);
+        }
+    }
+
+
+    private FieldPrefabObject _currentHoveredFieldPrefab;
+    private void OnClick_FieldPrefabs(FieldPrefabObject fieldPrefabObject)
+    {
+        Debug.Log($"OnClick_FieldPrefabs Row({fieldPrefabObject.Row}) Col({fieldPrefabObject.Col})");
         if (_currentHoveredFieldPrefab != null)
         {
             _currentHoveredFieldPrefab.UnsetHoverMode();
         }
-        _currentHoveredFieldPrefab = _fieldPrefabObject;
-        _fieldPrefabObject.SetHoverMode();
+        _currentHoveredFieldPrefab = fieldPrefabObject;
+        fieldPrefabObject.SetHoverMode();
     }
 
 }
