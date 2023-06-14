@@ -25,11 +25,27 @@ public class Game : MonoBehaviour
             for (int col = 0; col < 9; col++)
             {
                 GameObject instance = GameObject.Instantiate(FieldPrefab, SudokuFieldPanel.transform);
-                // instance.GetComponentInChildren<Text>().text = i.ToString();
+
                 FieldPrefabObject _fieldPrefabObject = new FieldPrefabObject(instance, row, col);
                 _fieldPrefabObjectDic.Add(new Tuple<int, int>(row, col), _fieldPrefabObject);
+
+                instance.GetComponent<Button>().onClick.AddListener(
+                    () => OnClick_FieldPrefabs(_fieldPrefabObject)
+                    );
             }
         }
+    }
+
+    private FieldPrefabObject _currentHoveredFieldPrefab;
+    private void OnClick_FieldPrefabs(FieldPrefabObject _fieldPrefabObject)
+    {
+        Debug.Log($"Clicked Prefab Row({_fieldPrefabObject.Row}) Col({_fieldPrefabObject.Col})");
+        if (_currentHoveredFieldPrefab != null)
+        {
+            _currentHoveredFieldPrefab.UnsetHoverMode();
+        }
+        _currentHoveredFieldPrefab = _fieldPrefabObject;
+        _fieldPrefabObject.SetHoverMode();
     }
 
 }
