@@ -6,9 +6,120 @@ public class SudokuGenerator
 {
     public static SudokuObject CreateSudokuObject()
     {
+        _finalSudokuObject = null;
         SudokuObject sudokuObject = new SudokuObject();
         CreateRandomGroups(sudokuObject);
+        if (TryToSolve(sudokuObject))
+        {
+            sudokuObject = _finalSudokuObject;
+        }
+        else
+        {
+            throw new System.Exception("Something went wrong");
+        }
         return sudokuObject;
+    }
+
+    private static SudokuObject _finalSudokuObject;
+
+    private static bool TryToSolve(SudokuObject sudokuObject)
+    {
+        // find empty fields which can be filled
+        if (HasEmptyFieldsToFill(sudokuObject, out int row, out int col))
+        {
+            List<int> possibleValues = GetPossibleValues(sudokuObject, row, col);
+            foreach (var possibleValue in possibleValues)
+            {
+                SudokuObject nextSudokuObject = new SudokuObject();
+                nextSudokuObject.Values = (int[,])sudokuObject.Values.Clone();
+                nextSudokuObject.Values[row, col] = possibleValue;
+                if (TryToSolve(nextSudokuObject))
+                {
+                    return true;
+                }
+            }
+        }
+
+        // has sudokuobject empty fields
+        if (HasEmptyFields(sudokuObject))
+        {
+            return false;
+        }
+        _finalSudokuObject = sudokuObject;
+        return true;
+        // finish
+    }
+
+    private static bool HasEmptyFields(SudokuObject sudokuObject)
+    {
+        for (int iRow = 0; iRow < 9; iRow++)
+        {
+            for (int jCol = 0; jCol < 9; jCol++)
+            {
+                if (sudokuObject.Values[iRow, jCol] == 0)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static List<int> GetPossibleValues(SudokuObject sudokuObject, int row, int col)
+    {
+        List<int> possibleValues = new List<int>();
+        for (int value = 1; value < 10; value++)
+        {
+            if (sudokuObject.IsPossibleNumberInPosition(value, row, col))
+            {
+                possibleValues.Add(value);
+            }
+        }
+        return possibleValues;
+    }
+
+    private static bool HasEmptyFieldsToFill(SudokuObject sudokuObject, out int row, out int col)
+    {
+        row = 0;
+        col = 0;
+        int amountOfPossibleValues = 10;
+        for (int iRow = 0; iRow < 9; iRow++)
+        {
+            for (int jCol = 0; jCol < 9; jCol++)
+            {
+                if (sudokuObject.Values[iRow, jCol] == 0)
+                {
+                    int _currentAmount = GetPossibleAmountOfValues(sudokuObject, iRow, jCol);
+                    if (_currentAmount != 0)
+                    {
+                        if (_currentAmount < amountOfPossibleValues)
+                        {
+                            amountOfPossibleValues = _currentAmount;
+                            row = iRow;
+                            col = jCol;
+                        }
+                    }
+                }
+            }
+        }
+        if (amountOfPossibleValues == 10)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private static int GetPossibleAmountOfValues(SudokuObject sudokuObject, int row, int col)
+    {
+        int amount = 0;
+        for (int value = 1; value < 10; value++)
+        {
+            if (sudokuObject.IsPossibleNumberInPosition(value, row, col))
+            {
+                amount++;
+            }
+        }
+        return amount;
     }
 
     public static void CreateRandomGroups(SudokuObject sudokuObject)
