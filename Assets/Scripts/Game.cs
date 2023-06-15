@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 
@@ -12,6 +13,7 @@ public class Game : MonoBehaviour
     public GameObject ControlPanel;
     public GameObject ControlPrefab;
     public Button InformationButton;
+    public Button BackButton;
 
 
     void Start()
@@ -19,6 +21,11 @@ public class Game : MonoBehaviour
         CreateFieldPrefabs();
         CreateControlPrefabs();
         CreateSudokuObject();
+    }
+
+    public void OnClick_BackButton()
+    {
+        SceneManager.LoadScene("MainScene");
     }
 
     private SudokuObject _currentSudokuObject;
