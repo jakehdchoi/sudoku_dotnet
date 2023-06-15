@@ -18,6 +18,25 @@ public class Game : MonoBehaviour
     {
         CreateFieldPrefabs();
         CreateControlPrefabs();
+        CreateSudokuObject();
+    }
+
+    private void CreateSudokuObject()
+    {
+        SudokuObject sudokuObject = SudokuGenerator.CreateSudokuObject();
+        for (int row = 0; row < 9; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                var currentValue = sudokuObject.Values[row, col];
+                if (currentValue != 0)
+                {
+                    FieldPrefabObject fieldObject = _fieldPrefabObjectDic[new Tuple<int, int>(row, col)];
+                    fieldObject.SetNumber(currentValue);
+                    fieldObject.isChangeable = false;
+                }
+            }
+        }
     }
 
     private bool isInformationButtonActive = false;
@@ -95,12 +114,15 @@ public class Game : MonoBehaviour
     private void OnClick_FieldPrefabs(FieldPrefabObject fieldPrefabObject)
     {
         Debug.Log($"OnClick_FieldPrefabs Row({fieldPrefabObject.Row}) Col({fieldPrefabObject.Col})");
-        if (_currentHoveredFieldPrefab != null)
+        if (fieldPrefabObject.isChangeable)
         {
-            _currentHoveredFieldPrefab.UnsetHoverMode();
+            if (_currentHoveredFieldPrefab != null)
+            {
+                _currentHoveredFieldPrefab.UnsetHoverMode();
+            }
+            _currentHoveredFieldPrefab = fieldPrefabObject;
+            fieldPrefabObject.SetHoverMode();
         }
-        _currentHoveredFieldPrefab = fieldPrefabObject;
-        fieldPrefabObject.SetHoverMode();
     }
 
 }

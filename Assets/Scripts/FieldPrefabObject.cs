@@ -16,6 +16,8 @@ public class FieldPrefabObject
         Col = col;
     }
 
+    public bool isChangeable = true;
+
     public bool TryGetTextByName(string name, out Text text)
     {
         // name은 prefab에서 사용하는 text object의 이름(파일명?)이다
