@@ -18,6 +18,16 @@ public class FieldPrefabObject
 
     public bool isChangeable = true;
 
+    public void ChangeColorToGreen()
+    {
+        _instance.GetComponent<Image>().color = Color.green;
+    }
+
+    public void ChangeColorToRed()
+    {
+        _instance.GetComponent<Image>().color = Color.red;
+    }
+
     public bool TryGetTextByName(string name, out Text text)
     {
         // name은 prefab에서 사용하는 text object의 이름(파일명?)이다
@@ -47,11 +57,13 @@ public class FieldPrefabObject
         _instance.GetComponent<Image>().color = new Color(1f, 1f, 1f);
     }
 
+    public int Number;
     public void SetNumber(int number)
     {
         // _instance.GetComponentInChildren<Text>().text = number.ToString();
         if (TryGetTextByName("Value", out Text text))
         {
+            Number = number;
             text.text = number.ToString();
             for (int i = 1; i < 10; i++)
             {
